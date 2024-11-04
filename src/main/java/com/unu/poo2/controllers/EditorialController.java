@@ -7,18 +7,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import com.unu.poo2.beans.Autor;
-import com.unu.poo2.model.AutoresModel;
+import com.unu.poo2.beans.Editorial;
+import com.unu.poo2.model.EditorialModel;
 
-public class AutoresController extends HttpServlet {
+public class EditorialController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	AutoresModel modelo = new AutoresModel();
+	EditorialModel modelo = new EditorialModel();
 
-	public AutoresController() {
+	public EditorialController() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -39,7 +36,7 @@ public class AutoresController extends HttpServlet {
 			break;
 		}
 		case "nuevo": {
-			request.getRequestDispatcher("/autores/nuevoAutor.jsp").forward(request, response);
+			request.getRequestDispatcher("/editoriales/nuevoEditorial.jsp").forward(request, response);
 			System.out.println("Entro a nuevo.");
 			break;
 		}
@@ -90,10 +87,9 @@ public class AutoresController extends HttpServlet {
 
 	private void listar(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException, SQLException {
-
 		try {
-			request.setAttribute("listaAutores", modelo.listarAutores());
-			request.getRequestDispatcher("/autores/listaAutores.jsp").forward(request, response);
+			request.setAttribute("listaEditorial", modelo.listarEditorial());
+			request.getRequestDispatcher("/editoriales/listaEditorial.jsp").forward(request, response);
 		} catch (ServletException | IOException ex) {
 			System.out.println("Error en Listar." + ex.getMessage());
 		}
@@ -103,17 +99,18 @@ public class AutoresController extends HttpServlet {
 	private void insertar(HttpServletRequest request, HttpServletResponse response) {
 		try {
 
-			Autor miAutor = new Autor();
-			miAutor.setNombre(request.getParameter("nombre"));
-			miAutor.setNacionalidad(request.getParameter("nacionalidad"));
+			Editorial miEditorial = new Editorial();
+			miEditorial.setNombre(request.getParameter("nombre"));
+			miEditorial.setContacto(request.getParameter("contacto"));
+			miEditorial.setTelefono(request.getParameter("telefono"));
 
-			if (modelo.insertarAutor(miAutor) > 0) {
-				request.getSession().setAttribute("exito", "autor registrado exitosamente");
-				response.sendRedirect(request.getContextPath() + "/AutoresController?op=listar");
+			if (modelo.insertarEditorial(miEditorial) > 0) {
+				request.getSession().setAttribute("exito", "editorial registrado exitosamente");
+				response.sendRedirect(request.getContextPath() + "/EditorialController?op=listar");
 			} else {
 				request.getSession().setAttribute("fracaso",
-						"El autor no ha sido ingresado" + "ya hay un autor con este codigo");
-				response.sendRedirect(request.getContextPath() + "/AutoresController?op=listar");
+						"El editorial no ha sido ingresado" + "ya hay un editorial con este codigo");
+				response.sendRedirect(request.getContextPath() + "/EditorialController?op=listar");
 			}
 
 		} catch (IOException | SQLException ex) {
@@ -124,11 +121,11 @@ public class AutoresController extends HttpServlet {
 	private void obtener(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			String codigo = request.getParameter("id");
-			Autor miAutor = modelo.obtenerAutor(Integer.parseInt(codigo));
+			Editorial miEditorial = modelo.obtenerEditorial(Integer.parseInt(codigo));
 
-			if (miAutor != null) {
-				request.setAttribute("autor", miAutor);
-				request.getRequestDispatcher("/autores/editarAutor.jsp").forward(request, response);
+			if (miEditorial != null) {
+				request.setAttribute("editorial", miEditorial);
+				request.getRequestDispatcher("/editoriales/editarEditorial.jsp").forward(request, response);
 			} else {
 				response.sendRedirect(request.getContextPath() + "/error404.jsp");
 			}
@@ -140,19 +137,20 @@ public class AutoresController extends HttpServlet {
 	private void modificar(HttpServletRequest request, HttpServletResponse response) {
 		try {
 
-			Autor miAutor = new Autor();
-			miAutor.setIdAutor(Integer.parseInt(request.getParameter("idautor")));
-			miAutor.setNombre(request.getParameter("nombre"));
-			miAutor.setNacionalidad(request.getParameter("nacionalidad"));
-			request.setAttribute("autor", miAutor);
+			Editorial miEditorial = new Editorial();
+			miEditorial.setIdeditorial(Integer.parseInt(request.getParameter("ideditorial")));
+			miEditorial.setNombre(request.getParameter("nombre"));
+			miEditorial.setContacto(request.getParameter("contacto"));
+			miEditorial.setTelefono(request.getParameter("telefono"));
+			request.setAttribute("editorial", miEditorial);
 
-			if (modelo.modificarAutor(miAutor) > 0) {
-				request.getSession().setAttribute("exito", "autor modificado exitosamente");
-				response.sendRedirect(request.getContextPath() + "/AutoresController?op=listar");
+			if (modelo.modificarEditorial(miEditorial) > 0) {
+				request.getSession().setAttribute("exito", "editorial modificado exitosamente");
+				response.sendRedirect(request.getContextPath() + "/EditorialController?op=listar");
 			} else {
 				request.getSession().setAttribute("fracaso",
-						"El autor no ha sido modificado" + "ya hay un autor con este codigo");
-				response.sendRedirect(request.getContextPath() + "/AutoresController?op=listar");
+						"El editorial no ha sido modificado" + "ya hay un editorial con este codigo");
+				response.sendRedirect(request.getContextPath() + "/EditorialController?op=listar");
 			}
 
 		} catch (IOException | SQLException ex) {
@@ -162,14 +160,14 @@ public class AutoresController extends HttpServlet {
 
 	private void eliminar(HttpServletRequest request, HttpServletResponse response) {
 		try {
-			int idautor = Integer.parseInt(request.getParameter("id"));
-			if (modelo.eliminarAutor(idautor) > 0) {
-				request.setAttribute("exito", "Autor eliminado exitosamente");
+			int ideditorial = Integer.parseInt(request.getParameter("id"));
+			if (modelo.eliminarEditorial(ideditorial) > 0) {
+				request.setAttribute("exito", "Editorial eliminado exitosamente");
 
 			} else {
-				request.setAttribute("fracaso", "No se puede eliminar este autor");
+				request.setAttribute("fracaso", "No se puede eliminar este editorial");
 			}
-			request.getRequestDispatcher("/AutoresController?op=listar").forward(request, response);
+			request.getRequestDispatcher("/EditorialController?op=listar").forward(request, response);
 		} catch (SQLException | ServletException | IOException ex) {
 			System.out.println("Error en eliminar." + ex.getMessage());
 		}

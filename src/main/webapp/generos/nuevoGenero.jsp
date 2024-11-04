@@ -9,20 +9,20 @@
 	rel="stylesheet"
 	integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
 	crossorigin="anonymous">
-<title>Nuevo Autor</title>
+<title>Nuevo Genero</title>
 </head>
 <body>
 	<%
 	String url = "http://localhost:8080/bibliotecaUnuPoo2/";
 	%>
 	<div class="container col-md-6 offset-md-3">
-		<br><h5>Nuevo Autor</h5>
-		<form action="<%=url%>AutoresController" method="Post">
+		<br><h5>Nuevo Genero</h5>
+		<form action="<%=url%>GeneroController" method="Post">
 		<input type="hidden" name = "op" value= "insertar">
-		Nombre del autor: <input type="text" name ="nombre" id = "nombre" class="form-control"><br>
-		Nacionalidad del autor: <input type="text" name ="nacionalidad" id="nacionalidad" class="form-control"><br>
+		Nombre del genero: <input type="text" name ="nombre" id = "nombre" class="form-control"><br>
+		Descripcion del genero: <input type="text" name ="descripcion" id="descripcion" class="form-control"><br>
 		<input type ="submit" value="Guardar" name="Guardar" class="btn btn-info">
-		<a href= "<%=url%>AutoresController?op=listar" class="btn btn-danger">Volver</a>
+		<a href= "<%=url%>GeneroController?op=listar" class="btn btn-danger">Volver</a>
 		</form>
 	</div>
 </body>
